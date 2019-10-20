@@ -3,10 +3,13 @@ const Usuario = require('../models/usuario');
 const app = express();
 const bcrypt = require('bcryptjs');
 const _ = require('underscore');
+const { verificaToken, verificaAdminRol } = require('../middlewares/autentificacion');
 
 
 // PETICIONES A UTLIZAR
-app.get('/usuario', function(req, res) {
+// Los middleware pueden ir como segundo parametro en esto tipo de servicios
+// usando lo que es Express.
+app.get('/usuario', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -28,7 +31,7 @@ app.get('/usuario', function(req, res) {
 
             }
 
-            Usuario.count({ estado: true }, (err, conteo) => {
+            Usuario.countDocuments({ estado: true }, (err, conteo) => {
                 res.json({
                     ok: true,
                     usuarios,
@@ -40,7 +43,7 @@ app.get('/usuario', function(req, res) {
 });
 
 // El post sirve mas que nada para crear nuevos registros.
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificaToken, verificaAdminRol], function(req, res) {
     /*Para procesar la información recibida y serializarla en un objecto json
     se utilizá el siguiente paquete body-parser npm*/
     let body = req.body;
@@ -88,7 +91,7 @@ app.post('/usuario', function(req, res) {
 
 
 // El PUT es muy utilizado para actualizar data
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdminRol], function(req, res) {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -113,7 +116,7 @@ app.put('/usuario/:id', function(req, res) {
 });
 
 // El delete mas que nada para inabilidar registros.
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdminRol], function(req, res) {
 
     let id = req.params.id;
 
