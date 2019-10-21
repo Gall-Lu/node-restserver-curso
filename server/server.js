@@ -3,6 +3,7 @@ const express = require('express');
 // Using Node.js `require()`
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 
@@ -12,6 +13,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
     // que pasa el código por aqui.
     // parse application/json
 app.use(bodyParser.json())
+
+
+// Habilitar la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));
+console.log(path.resolve(__dirname, '../public'));
+
 
 // Configuración global de rutas
 app.use(require('./routes/index'));
