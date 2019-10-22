@@ -42,6 +42,7 @@ app.get('/usuario', verificaToken, (req, res) => {
         });
 });
 
+
 // El post sirve mas que nada para crear nuevos registros.
 app.post('/usuario', [verificaToken, verificaAdminRol], function(req, res) {
     /*Para procesar la información recibida y serializarla en un objecto json
@@ -89,7 +90,6 @@ app.post('/usuario', [verificaToken, verificaAdminRol], function(req, res) {
 });
 
 
-
 // El PUT es muy utilizado para actualizar data
 app.put('/usuario/:id', [verificaToken, verificaAdminRol], function(req, res) {
     let id = req.params.id;
@@ -114,6 +114,7 @@ app.put('/usuario/:id', [verificaToken, verificaAdminRol], function(req, res) {
     });
 
 });
+
 
 // El delete mas que nada para inabilidar registros.
 app.delete('/usuario/:id', [verificaToken, verificaAdminRol], function(req, res) {
